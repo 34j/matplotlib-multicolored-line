@@ -7,7 +7,7 @@ name = "matplotlib-multicolored-line"
 version = "0.0.0"
 description = "Plot multicolored lines in Matplotlib"
 readme = "README.md"
-license = { text = "MIT" }
+license = "CC0-1.0"
 authors = [
   { name = "34j", email = "34j.95a2p@simplelogin.com" },
 ]
@@ -26,6 +26,7 @@ classifiers = [
 ]
 
 dependencies = [
+    "matplotlib>=3.9.4",
 ]
 urls."Bug Tracker" = "https://github.com/34j/matplotlib-multicolored-line/issues"
 urls.Changelog = "https://github.com/34j/matplotlib-multicolored-line/blob/main/CHANGELOG.md"
@@ -45,7 +46,7 @@ docs = [
 ]
 
 [tool.ruff]
-line-length = 88
+line-length = 100
 lint.select = [
   "B",   # flake8-bugbear
   "D",   # flake8-docstrings
