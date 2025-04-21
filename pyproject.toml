@@ -7,7 +7,7 @@ name = "matplotlib-multicolored-line"
 version = "0.0.0"
 description = "Plot multicolored lines in Matplotlib"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "CC0-1.0"
 authors = [
   { name = "34j", email = "34j.95a2p@simplelogin.com" },
 ]
