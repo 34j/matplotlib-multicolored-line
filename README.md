@@ -51,6 +51,12 @@ pip install matplotlib-multicolored-line
 ## Usage
 
 ```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+from matplotlib_multicolored_line import colored_line
+
+
 t = np.linspace(-7.4, -0.5, 200)
 x = 0.9 * np.sin(t)
 y = 0.9 * np.cos(1.6 * t)
