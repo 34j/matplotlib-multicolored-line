@@ -38,13 +38,31 @@
 
 ---
 
-Plot multicolored lines in Matplotlib
+Plot multicolored lines in Matplotlib. Port of [Multicolored lines — Matplotlib 3.10.1 documentation](https://matplotlib.org/stable/gallery/lines_bars_and_markers/multicolored_line.html) with slight improvements.
 
 ## Installation
 
 Install this via pip (or your favourite package manager):
 
-`pip install matplotlib-multicolored-line`
+```shell
+pip install matplotlib-multicolored-line
+```
+
+## Usage
+
+```python
+t = np.linspace(-7.4, -0.5, 200)
+x = 0.9 * np.sin(t)
+y = 0.9 * np.cos(1.6 * t)
+
+fig, ax = plt.subplots()
+lc = colored_line(x, y, t, ax, linewidth=5)
+fig.colorbar(lc)
+```
+
+![Result](https://raw.githubusercontent.com/34j/matplotlib-multicolored-line/main/example.jpg)
+
+![Result 2](https://raw.githubusercontent.com/34j/matplotlib-multicolored-line/main/example_small.jpg)
 
 ## Contributors ✨
 
