@@ -55,15 +55,16 @@ def colored_line(
         )
 
     xy = np.stack((x, y), axis=-1)
-    xy_mid = np.concat((xy[[0], :], (xy[:-1, :] + xy[1:, :]) / 2, xy[[-1], :]), axis=0)
-
-    # segments = [
+    xy_mid = np.concat(
+        (xy[0, :][None, :], (xy[:-1, :] + xy[1:, :]) / 2, xy[-1, :][None, :]), axis=0
+    )
+    segments = np.stack((xy_mid[:-1, :], xy, xy_mid[1:, :]), axis=-2)
+    # Note that segments is [
     #   [[x[0], y[0]], [x[0], y[0]], [mean(x[0], x[1]), mean(y[0], y[1])]],
     #   [[mean(x[0], x[1]), mean(y[0], y[1])], [x[1], y[1]], [mean(x[1], x[2]), mean(y[1], y[2])]],
     #   ...
     #   [[mean(x[-2], x[-1]), mean(y[-2], y[-1])], [x[-1], y[-1]], [x[-1], y[-1]]]
     # ]
-    segments = np.stack((xy_mid[:-1, :], xy, xy_mid[1:, :]), axis=-2)
 
     kwargs["array"] = c
     lc = LineCollection(segments, **kwargs)
