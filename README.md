@@ -62,13 +62,22 @@ x = 0.9 * np.sin(t)
 y = 0.9 * np.cos(1.6 * t)
 
 fig, ax = plt.subplots()
-lc = colored_line(x, y, t, ax, linewidth=5)
+lc = colored_line(x, y, c=t, ax=ax, linewidth=10)
 fig.colorbar(lc)
 ```
 
 ![Result](https://raw.githubusercontent.com/34j/matplotlib-multicolored-line/main/example.jpg)
 
-![Result 2](https://raw.githubusercontent.com/34j/matplotlib-multicolored-line/main/example_small.jpg)
+```python
+y = np.random.normal(size=(5, 2))
+c = np.random.normal(size=(5, 2))
+
+fig, ax = plt.subplots()
+lc = colored_line(y, c=c, ax=ax, linewidth=10)
+fig.colorbar(lc)
+```
+
+![Result 2](https://raw.githubusercontent.com/34j/matplotlib-multicolored-line/main/example_multiple.jpg)
 
 ## Contributors ✨
 
