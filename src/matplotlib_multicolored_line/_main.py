@@ -11,12 +11,11 @@ from numpy.typing import ArrayLike
 
 
 def colored_line(
-    x: ArrayLike,
-    y: ArrayLike,
+    *args: ArrayLike,
     c: ArrayLike,
+    start: ArrayLike = 0.5,
+    end: ArrayLike = 0,
     ax: Axes | None = None,
-    scalex: bool = True,
-    scaley: bool = True,
     **kwargs: Any,
 ) -> LineCollection:
     """
@@ -29,15 +28,19 @@ def colored_line(
 
     Parameters
     ----------
-    x, y : array-like
-        The horizontal and vertical coordinates of the data points.
+    *args : array-like
+        The horizontal and vertical coordinates of the data points
+        of shape (N,) or (N, m).
     c : array-like
         The color values, which should be the same size as x and y.
     ax : matplotlib.axes.Axes, optional
         The axes to plot on. If not provided, the current axes will be used.
-    scalex, scaley : bool
-        These parameters determine if the view limits are adapted to the data limits.
-        The values are passed on to autoscale_view.
+    start : array-like, optional
+        The ratio of the point where the color starts.
+        Should be between 0 and 1.
+    end : array-like, optional
+        The ratio of the point where the color changes.
+        Should be between 0 and 1.
     **kwargs : Any
         Any additional arguments to pass to matplotlib.collections.LineCollection
         constructor. This should not include the array keyword argument because
@@ -56,25 +59,42 @@ def colored_line(
             stacklevel=2,
         )
 
-    xy = np.stack((x, y), axis=-1)
-    xy_mid = np.concat(
-        (xy[0, :][None, :], (xy[:-1, :] + xy[1:, :]) / 2, xy[-1, :][None, :]), axis=0
-    )
-    segments = np.stack((xy_mid[:-1, :], xy, xy_mid[1:, :]), axis=-2)
-    # Note that segments is [
-    #   [[x[0], y[0]], [x[0], y[0]], [mean(x[0], x[1]), mean(y[0], y[1])]],
-    #   [[mean(x[0], x[1]), mean(y[0], y[1])], [x[1], y[1]], [mean(x[1], x[2]), mean(y[1], y[2])]],
-    #   ...
-    #   [[mean(x[-2], x[-1]), mean(y[-2], y[-1])], [x[-1], y[-1]], [x[-1], y[-1]]]
-    # ]
+    # parse args
+    if len(args) == 1:
+        y = args[0]
+        x = np.arange(len(y))
+    elif len(args) == 2:
+        x, y = args
+    else:
+        raise ValueError("Invalid number of arguments. Provide either x and y or just y.")
 
-    kwargs["array"] = c
+    # ensure x, y, c are 1D or 2D arrays
+    x, y, c = map(np.asarray, (x, y, c))
+    if x.ndim == 1:
+        x = x[:, None]
+    if y.ndim == 1:
+        y = y[:, None]
+    x, y = np.broadcast_arrays(x, y)
+
+    # (N, m, 2)
+    xy = np.stack((x, y), axis=-1)
+    # (N, m, 2)
+    xy_start = np.concat(
+        (xy[0, :, :][None, :, :], xy[:-1, :, :] * (1 - start) + xy[1:, :, :] * start), axis=0
+    )
+    xy_end = np.concat(
+        (xy[:-1, :, :] * end + xy[1:, :, :] * (1 - end), xy[-1, :][None, :, :]), axis=0
+    )
+    segments = np.stack((xy_start, xy, xy_end), axis=-2)
+    segments = np.reshape(segments, (-1, segments.shape[-2], segments.shape[-1]))
+
+    kwargs["array"] = c.reshape(-1)
     lc = LineCollection(segments, **kwargs)
 
     # Plot the line collection to the axes
     ax = ax or plt.gca()
     ax.add_collection(lc)
-    ax.autoscale_view(scalex=scalex, scaley=scaley)
+    ax.autoscale_view()
 
     # Return the LineCollection object
     return lc

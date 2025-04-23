@@ -20,7 +20,7 @@ def test_main() -> None:
     y = 0.9 * np.cos(1.6 * t)
 
     fig, ax = plt.subplots()
-    lc = colored_line(x, y, t, ax, linewidth=10)
+    lc = colored_line(x, y, c=t, ax=ax, linewidth=10)
     fig.colorbar(lc)
     fig.savefig(CACHE_PATH / "example.jpg")
 
@@ -31,6 +31,17 @@ def test_main_small() -> None:
     c = [1, 2, 3, 4, 5]
 
     fig, ax = plt.subplots()
-    lc = colored_line(x, y, c, ax, linewidth=10)
+    lc = colored_line(x, y, c=c, ax=ax, linewidth=10)
     fig.colorbar(lc)
     fig.savefig(CACHE_PATH / "example_small.jpg")
+
+
+def test_multiple() -> None:
+    np.random.seed(0)
+    y = np.random.normal(size=(5, 2))
+    c = np.random.normal(size=(5, 2))
+
+    fig, ax = plt.subplots()
+    lc = colored_line(y, c=c, ax=ax, linewidth=10)
+    fig.colorbar(lc)
+    fig.savefig(CACHE_PATH / "example_multiple.jpg")
