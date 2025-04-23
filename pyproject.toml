@@ -4,7 +4,7 @@ requires = [ "setuptools" ]
 
 [project]
 name = "matplotlib-multicolored-line"
-version = "0.1.0"
+version = "0.1.1"
 description = "Plot multicolored lines in Matplotlib"
 readme = "README.md"
 license = "CC0-1.0"
