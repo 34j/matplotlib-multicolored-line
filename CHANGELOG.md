@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.0 (2025-04-23)
+
+### Features
+
+- Support multiple plot (#8) ([`dd67d48`](https://github.com/34j/matplotlib-multicolored-line/commit/dd67d48d315ea291412a5b566fb5507b08647b65))
+
 ## v0.1.1 (2025-04-23)
 
 ### Bug fixes
