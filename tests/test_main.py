@@ -1,8 +1,10 @@
+from collections.abc import Sequence
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
+from numpy.typing import ArrayLike
 
 from matplotlib_multicolored_line import colored_line
 
@@ -14,34 +16,99 @@ def setup_cache() -> None:
     CACHE_PATH.mkdir(parents=True, exist_ok=True)
 
 
-def test_main() -> None:
-    t = np.linspace(-7.4, -0.5, 200)
-    x = 0.9 * np.sin(t)
-    y = 0.9 * np.cos(1.6 * t)
+t = np.linspace(-7.4, -0.5, 200)
 
+
+@pytest.mark.parametrize(
+    "name, args, c",
+    [
+        ("notebook1", (0.9 * np.sin(t), 0.5 * np.sin(t)), t),
+        ("notebook2", ([0, 1, 2, 3, 4], [0, 1, 2, 1, 1]), [1, 2, 3, 4, 5]),
+        ("singley", (np.random.normal(size=(5,)),), np.random.normal(size=(5,))),
+        ("singley.rgb", (np.random.normal(size=(5,)),), np.random.normal(size=(5, 1, 3))),
+        ("singley.rgba", (np.random.normal(size=(5,)),), np.random.normal(size=(5, 1, 4))),
+        (
+            "singley.colors",
+            (np.random.normal(size=(5,)),),
+            np.random.choice(["black", "red"], size=(5,)),
+        ),
+        (
+            "singlexy",
+            (
+                np.random.normal(size=(5,)),
+                np.random.normal(size=(5,)),
+            ),
+            np.random.normal(size=(5,)),
+        ),
+        (
+            "singlexy.rgb",
+            (
+                np.random.normal(size=(5,)),
+                np.random.normal(size=(5,)),
+            ),
+            np.random.normal(size=(5, 1, 3)),
+        ),
+        (
+            "singlexy.rgba",
+            (
+                np.random.normal(size=(5,)),
+                np.random.normal(size=(5,)),
+            ),
+            np.random.normal(size=(5, 1, 4)),
+        ),
+        (
+            "singlexy.colors",
+            (
+                np.random.normal(size=(5,)),
+                np.random.normal(size=(5,)),
+            ),
+            np.random.choice(["black", "red"], size=(5,)),
+        ),
+        ("multiy", (np.random.normal(size=(5, 2)),), np.random.normal(size=(5, 2))),
+        ("multiy.rgb", (np.random.normal(size=(5, 2)),), np.random.uniform(size=(5, 2, 3))),
+        ("multiy.rgba", (np.random.normal(size=(5, 2)),), np.random.uniform(size=(5, 2, 4))),
+        (
+            "multiy.colors",
+            (np.random.normal(size=(5, 2)),),
+            np.random.choice(["black", "red"], size=(5, 2)),
+        ),
+        (
+            "multixy",
+            (
+                np.random.normal(size=(5, 2)),
+                np.random.normal(size=(5, 2)),
+            ),
+            np.random.normal(size=(5, 2)),
+        ),
+        (
+            "multixy.rgb",
+            (
+                np.random.normal(size=(5, 2)),
+                np.random.normal(size=(5, 2)),
+            ),
+            np.random.uniform(size=(5, 2, 3)),
+        ),
+        (
+            "multixy.rgba",
+            (
+                np.random.normal(size=(5, 2)),
+                np.random.normal(size=(5, 2)),
+            ),
+            np.random.uniform(size=(5, 2, 4)),
+        ),
+        (
+            "multixy.colors",
+            (
+                np.random.normal(size=(5, 2)),
+                np.random.normal(size=(5, 2)),
+            ),
+            np.random.choice(["black", "red"], size=(5, 2)),
+        ),
+    ],
+)
+def test_multicolor(name: str, args: Sequence[ArrayLike], c: ArrayLike) -> None:
     fig, ax = plt.subplots()
-    lc = colored_line(x, y, c=t, ax=ax, linewidth=10)
-    fig.colorbar(lc)
-    fig.savefig(CACHE_PATH / "example.jpg")
-
-
-def test_main_small() -> None:
-    x = [0, 1, 2, 3, 4]
-    y = [0, 1, 2, 1, 1]
-    c = [1, 2, 3, 4, 5]
-
-    fig, ax = plt.subplots()
-    lc = colored_line(x, y, c=c, ax=ax, linewidth=10)
-    fig.colorbar(lc)
-    fig.savefig(CACHE_PATH / "example_small.jpg")
-
-
-def test_multiple() -> None:
-    np.random.seed(0)
-    y = np.random.normal(size=(5, 2))
-    c = np.random.normal(size=(5, 2))
-
-    fig, ax = plt.subplots()
-    lc = colored_line(y, c=c, ax=ax, linewidth=10)
-    fig.colorbar(lc)
-    fig.savefig(CACHE_PATH / "example_multiple.jpg")
+    lc = colored_line(*args, c=c, ax=ax, linewidth=10)
+    if "rgb" not in name:
+        fig.colorbar(lc)
+    fig.savefig(CACHE_PATH / f"example.{name}.jpg")
