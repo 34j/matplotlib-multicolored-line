@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.0 (2025-04-24)
+
+### Features
+
+- Support array of colors and rgb(a) (#9) ([`f0edcbe`](https://github.com/34j/matplotlib-multicolored-line/commit/f0edcbe96edd96693fff9a5ced62355218632112))
+
 ## v0.2.0 (2025-04-23)
 
 ### Features
