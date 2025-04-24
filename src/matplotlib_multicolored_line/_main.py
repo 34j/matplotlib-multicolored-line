@@ -31,8 +31,13 @@ def colored_line(
     *args : array-like
         The horizontal and vertical coordinates of the data points
         of shape (N,) or (N, m).
-    c : array-like
-        The color values, which should be the same size as x and y.
+    c : array-like or array-like of color, optional
+        The line values. Possible values:
+        - array-like of numbers of shape (N,) or (N, m) to be mapped
+            to colors using cmap and norm.
+        - array-like of numbers of shape (N, m, 3) or (N, m, 4),
+            where the last dimension is RGB or RGBA.
+        - array-like of colors of shape (N,) or (N, m).
     ax : matplotlib.axes.Axes, optional
         The axes to plot on. If not provided, the current axes will be used.
     start : array-like, optional
@@ -52,12 +57,13 @@ def colored_line(
         The generated line collection representing the colored line.
 
     """
-    if "array" in kwargs:
-        warnings.warn(
-            'The provided "array" keyword argument will be overridden',
-            UserWarning,
-            stacklevel=2,
-        )
+    for key in ["array", "colors"]:
+        if key in kwargs:
+            warnings.warn(
+                f'The provided "{key}" keyword argument will be overridden',
+                UserWarning,
+                stacklevel=2,
+            )
 
     # parse args
     if len(args) == 1:
@@ -72,9 +78,32 @@ def colored_line(
     x, y, c = map(np.asarray, (x, y, c))
     if x.ndim == 1:
         x = x[:, None]
+    elif x.ndim == 2:
+        pass
+    else:
+        raise ValueError(f"{x.ndim=} should be 1 or 2")
     if y.ndim == 1:
         y = y[:, None]
+    elif y.ndim == 2:
+        pass
+    else:
+        raise ValueError(f"{y.ndim=} should be 1 or 2")
     x, y = np.broadcast_arrays(x, y)
+
+    if c.ndim == 1:
+        c = c[:, None]
+    if c.ndim == 2:
+        c = np.broadcast_to(c, x.shape).reshape((-1,))
+        if np.issubdtype(c.dtype, np.number):
+            kwargs["array"] = c
+        else:
+            kwargs["colors"] = c
+    elif c.ndim == 3:
+        c = np.broadcast_to(c, (*x.shape, c.shape[-1])).reshape((-1, c.shape[-1]))
+        c = [tuple(c[i]) for i in range(c.shape[0])]
+        kwargs["colors"] = c
+    else:
+        raise ValueError(f"{c.ndim=} should be 2 or 3")
 
     # (N, m, 2)
     xy = np.stack((x, y), axis=-1)
@@ -88,7 +117,6 @@ def colored_line(
     segments = np.stack((xy_start, xy, xy_end), axis=-2)
     segments = np.reshape(segments, (-1, segments.shape[-2], segments.shape[-1]))
 
-    kwargs["array"] = c.reshape(-1)
     lc = LineCollection(segments, **kwargs)
 
     # Plot the line collection to the axes
