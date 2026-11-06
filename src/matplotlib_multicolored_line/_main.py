@@ -33,10 +33,11 @@ def colored_line(
         of shape (N,) or (N, m).
     c : array-like or array-like of color, optional
         The line values. Possible values:
-        - array-like of numbers of shape (N,) or (N, m) to be mapped
-            to colors using cmap and norm.
-        - array-like of numbers of shape (N, m, 3) or (N, m, 4),
-            where the last dimension is RGB or RGBA.
+
+        - array-like of numbers of shape (N,) or (N, m), to be mapped to
+          colors using cmap and norm.
+        - array-like of numbers of shape (N, m, 3) or (N, m, 4), where the
+          last dimension is RGB or RGBA.
         - array-like of colors of shape (N,) or (N, m).
     ax : matplotlib.axes.Axes, optional
         The axes to plot on. If not provided, the current axes will be used.
