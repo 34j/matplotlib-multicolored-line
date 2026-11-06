@@ -8,6 +8,8 @@ from numpy.typing import ArrayLike
 
 from matplotlib_multicolored_line import colored_line
 
+plt.switch_backend("Agg")
+
 CACHE_PATH = Path(__file__).parent / ".cache"
 
 

@@ -46,14 +46,14 @@ docs = [
 [tool.ruff]
 extend = ".venv/ruff.toml"
 lint.ignore = [
-  "A001",   # Built-in name shadowed by Sphinx configuration.
-  "C901",   # The plotting API keeps its input-shape branches together.
-  "DOC501", # Existing public API documents its raised ValueError behavior.
-  "D401",   # Preserve the existing Sphinx callback docstring.
-  "NPY002", # Preserve NumPy's global random helpers in visual test fixtures.
+  "A001",    # Built-in name shadowed by Sphinx configuration.
+  "C901",    # The plotting API keeps its input-shape branches together.
+  "D401",    # Preserve the existing Sphinx callback docstring.
+  "DOC501",  # Existing public API documents its raised ValueError behavior.
+  "NPY002",  # Preserve NumPy's global random helpers in visual test fixtures.
   "PLR2004", # Shape dimensions are intentionally compared with literals.
-  "PT006",  # Keep the existing readable parametrization declaration.
-  "TC002",  # Runtime imports are required by Matplotlib annotations.
+  "PT006",   # Keep the existing readable parametrization declaration.
+  "TC002",   # Runtime imports are required by Matplotlib annotations.
 ]
 
 [tool.pyproject-fmt]
