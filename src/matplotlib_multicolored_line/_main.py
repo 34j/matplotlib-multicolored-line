@@ -68,15 +68,18 @@ def colored_line(
 
     # parse args
     if len(args) == 1:
-        y = args[0]
+        y = np.asarray(args[0])
         x = np.arange(len(y))
     elif len(args) == 2:
-        x, y = args
+        x = np.asarray(args[0])
+        y = np.asarray(args[1])
     else:
         raise ValueError("Invalid number of arguments. Provide either x and y or just y.")
 
     # ensure x, y, c are 1D or 2D arrays
-    x, y, c = map(np.asarray, (x, y, c))
+    c = np.asarray(c)
+    start = np.asarray(start)
+    end = np.asarray(end)
     if x.ndim == 1:
         x = x[:, None]
     elif x.ndim == 2:
@@ -118,7 +121,7 @@ def colored_line(
     segments = np.stack((xy_start, xy, xy_end), axis=-2)
     segments = np.reshape(segments, (-1, segments.shape[-2], segments.shape[-1]))
 
-    lc = LineCollection(segments, **kwargs)
+    lc = LineCollection(segments.tolist(), **kwargs)
 
     # Plot the line collection to the axes
     ax = ax or plt.gca()
