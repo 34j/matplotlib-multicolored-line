@@ -24,7 +24,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-  "matplotlib>=3.9.4",
+  "matplotlib>=3.11.2",
 ]
 urls."Bug Tracker" = "https://github.com/34j/matplotlib-multicolored-line/issues"
 urls.Changelog = "https://github.com/34j/matplotlib-multicolored-line/blob/main/CHANGELOG.md"
